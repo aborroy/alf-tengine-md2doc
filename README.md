@@ -134,16 +134,18 @@ If you want to build and publish your own version of the image (e.g., to your ow
 ### Enable Buildx (if not already enabled)
 
 ```bash
-docker buildx create --name multiarch-builder --use
+docker buildx create --name multiarch-builder --driver docker-container --use
 docker buildx inspect --bootstrap
 ```
+
+Attestations require either a `docker-container` builder or Docker Desktop with the containerd image store enabled. The default `docker` driver fails with `Attestation is not supported for the docker driver`.
 
 ### Build and Push Multi-Arch Image
 
 Replace `yourdockeruser` with your Docker Hub username or private registry path:
 
 ```bash
-docker buildx build --no-cache \
+docker buildx build --builder multiarch-builder --no-cache \
   --platform linux/amd64,linux/arm64 \
   --attest type=sbom --attest type=provenance,mode=max \
   --tag yourdockeruser/alf-tengine-md2doc:latest \
@@ -155,6 +157,8 @@ This command:
 * Builds the image for both `amd64` and `arm64` architectures.
 * Tags it as `yourdockeruser/alf-tengine-md2doc:latest`.
 * Pushes it to your specified registry.
+
+If you do not need SBOM/provenance attestations, you can omit both `--attest` flags and build with your current builder.
 
 > Make sure you're logged into your Docker registry before pushing:
 
