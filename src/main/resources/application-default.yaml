@@ -4,6 +4,11 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+management:
+  health:
+    jms:
+      enabled: ${MANAGEMENT_HEALTH_JMS_ENABLED:false}
+
 queue:
   engineRequestQueue: md2doc-engine-queue
 

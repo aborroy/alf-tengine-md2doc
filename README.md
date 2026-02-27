@@ -73,11 +73,14 @@ The app listens on `:8090` by default.
 |---|---|---|
 | `spring.servlet.multipart.max-file-size` | `100MB` | Max upload size |
 | `spring.servlet.multipart.max-request-size` | `100MB` | Max request size |
+| `management.health.jms.enabled` | `false` | Disable JMS broker health probing by default |
 | `transform.pandoc.toc.enabled` | `false` | Enable Table of Contents by default |
 | `transform.pandoc.toc.depth` | `3` | Default TOC heading depth (1-6) |
 | `transform.pandoc.pdf.engine` | `xelatex` | LaTeX engine for PDF generation |
 
 Edit `src/main/resources/application-default.yaml` or supply env vars/`-D` flags.
+
+JMS health probing is disabled by default so Community deployments do not try to contact an ActiveMQ broker via `/actuator/health`. If you want broker health checks in an Enterprise deployment, set `MANAGEMENT_HEALTH_JMS_ENABLED=true`.
 
 ### Testing with the HTML Interface
 
