@@ -83,9 +83,12 @@ public class PandocService {
 
         if (MIMETYPE_PDF.equals(targetMimetype)) {
             command.add("--pdf-engine=" + pdfEngine);
-            // Better default margins for PDF
             command.add("-V");
             command.add("geometry:margin=2.5cm");
+            File tableBordersFilter = new File("/app/table-borders.lua");
+            if (tableBordersFilter.exists()) {
+                command.add("--lua-filter=" + tableBordersFilter.getAbsolutePath());
+            }
         }
 
         // Reference doc for DOCX styling (if present in classpath)

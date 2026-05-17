@@ -43,6 +43,9 @@ COPY --from=build /workspace/target/*.jar /app/app.jar
 # Reference template for styled DOCX output
 COPY reference.docx /app/reference.docx
 
+# Lua filter for PDF table borders
+COPY src/main/resources/table-borders.lua /app/table-borders.lua
+
 RUN chown -R ${USER_NAME}:${GROUP_NAME} /app ${HOME_DIR}
 
 USER ${USER_NAME}
