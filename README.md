@@ -62,7 +62,7 @@ curl -X POST \
 
 ```bash
 mvn clean package -DskipTests
-java -jar target/alf-tengine-md2doc-1.0.0.jar
+java -jar target/alf-tengine-md2doc-1.1.0.jar
 ```
 
 The app listens on `:8090` by default.
