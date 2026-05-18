@@ -1,16 +1,16 @@
--- Pandoc Lua filter: render all tables with full borders (row lines + column separators)
+-- Pandoc Lua filter: render all tables with full borders and word-wrapping columns.
+-- Uses tabularx so columns share \linewidth and content wraps automatically.
+-- Requires tabularx and array LaTeX packages (injected via --include-in-header).
 -- Targets PDF/LaTeX output only; other formats are passed through unchanged.
--- Tested against Pandoc 3.x AST (colspecs, cell.contents).
 
 local function is_pdf_output()
     return FORMAT == "latex" or FORMAT == "pdf" or FORMAT == "beamer"
 end
 
 local function col_spec(align)
-    if align == "AlignLeft"   then return "l" end
-    if align == "AlignRight"  then return "r" end
-    if align == "AlignCenter" then return "c" end
-    return "l"
+    if align == "AlignRight"  then return ">{\\raggedleft\\arraybackslash}X" end
+    if align == "AlignCenter" then return ">{\\centering\\arraybackslash}X" end
+    return ">{\\raggedright\\arraybackslash}X"
 end
 
 local function render_cell(cell)
@@ -46,10 +46,9 @@ local function table_to_latex(tbl)
     end
 
     local lines = {}
-    lines[#lines+1] = "\\begin{tabular}{" .. col_fmt .. "}"
+    lines[#lines+1] = "\\begin{tabularx}{\\linewidth}{" .. col_fmt .. "}"
     lines[#lines+1] = "\\hline"
 
-    -- Header rows
     local head_rows = tbl.head and tbl.head.rows or {}
     if #head_rows > 0 then
         for _, line in ipairs(rows_to_latex(head_rows, true)) do
@@ -57,14 +56,13 @@ local function table_to_latex(tbl)
         end
     end
 
-    -- Body rows
     for _, body in ipairs(tbl.bodies) do
         for _, line in ipairs(rows_to_latex(body.body, false)) do
             lines[#lines+1] = line
         end
     end
 
-    lines[#lines+1] = "\\end{tabular}"
+    lines[#lines+1] = "\\end{tabularx}"
 
     return table.concat(lines, "\n")
 end
@@ -73,6 +71,5 @@ function Table(tbl)
     if not is_pdf_output() then
         return nil
     end
-    local latex = table_to_latex(tbl)
-    return pandoc.RawBlock("latex", latex)
+    return pandoc.RawBlock("latex", table_to_latex(tbl))
 end

@@ -85,6 +85,8 @@ public class PandocService {
             command.add("--pdf-engine=" + pdfEngine);
             command.add("-V");
             command.add("geometry:margin=2.5cm");
+            command.add("-V");
+            command.add("header-includes=\\usepackage{tabularx}\\usepackage{array}\\usepackage{fvextra}\\DefineVerbatimEnvironment{verbatim}{Verbatim}{breaklines=true,breakanywhere=true}");
             File tableBordersFilter = new File("/app/table-borders.lua");
             if (tableBordersFilter.exists()) {
                 command.add("--lua-filter=" + tableBordersFilter.getAbsolutePath());

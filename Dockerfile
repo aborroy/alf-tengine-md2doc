@@ -20,6 +20,7 @@ RUN apt-get update && \
         texlive-latex-recommended \
         texlive-latex-extra \
         texlive-fonts-recommended \
+        texlive-plain-generic \
         texlive-xetex \
         lmodern \
         curl \
